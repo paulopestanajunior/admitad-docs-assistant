@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admitad Docs Assistant — User Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0b11;
+    --surface: #12121c;
+    --border: #1e1e30;
+    --text: #d4d4e0;
+    --text-muted: #6b7280;
+    --accent: #818cf8;
+    --accent2: #34d399;
+    --accent3: #f59e0b;
+    --white: #f0f0f8;
+  }
+
+  @media print {
+    :root { --bg: #fff; --surface: #f9f9fb; --border: #e0e0e0; --text: #1a1a2e; --text-muted: #666; --white: #000; }
+    body { background: #fff; }
+    .no-print { display: none; }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 32px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header .badge {
+    display: inline-block;
+    background: rgba(129, 140, 248, 0.1);
+    border: 1px solid rgba(129, 140, 248, 0.25);
+    border-radius: 100px;
+    padding: 6px 18px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .header h1 {
+    font-size: 38px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .header p {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* Sections */
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--white);
+    margin: 48px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h2 .num {
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    margin-right: 8px;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--white);
+    margin: 28px 0 12px;
+  }
+
+  p { margin-bottom: 16px; }
+
+  /* Steps */
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+  }
+
+  .steps li {
+    counter-increment: step;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    position: relative;
+    padding-left: 64px;
+  }
+
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(129, 140, 248, 0.15);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .steps li strong {
+    color: var(--white);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* Mode cards */
+  .modes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  .mode-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .mode-card .icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .mode-card .name {
+    font-weight: 600;
+    color: var(--white);
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  .mode-card .desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .mode-card .cost {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    margin-top: 8px;
+  }
+
+  /* Info boxes */
+  .info-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+
+  .info-box.tip {
+    border-left: 3px solid var(--accent2);
+  }
+
+  .info-box.warning {
+    border-left: 3px solid var(--accent3);
+  }
+
+  .info-box .label {
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .info-box.tip .label { color: var(--accent2); }
+  .info-box.warning .label { color: var(--accent3); }
+
+  /* Code */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(129, 140, 248, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--accent);
+  }
+
+  /* Screenshot placeholder */
+  .screenshot {
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    margin: 20px 0;
+  }
+
+  /* URL box */
+  .url-box {
+    background: rgba(129, 140, 248, 0.08);
+    border: 1px solid rgba(129, 140, 248, 0.2);
+    border-radius: 12px;
+    padding: 20px 24px;
+    text-align: center;
+    margin: 24px 0;
+  }
+
+  .url-box .label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .url-box a {
+    color: var(--accent);
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    word-break: break-all;
+  }
+
+  .url-box a:hover { text-decoration: underline; }
+
+  /* Example */
+  .example {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 20px 0;
+  }
+
+  .example .q {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+
+  .example .q span {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .example .a {
+    padding: 16px 20px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .example .a strong {
+    color: var(--accent2);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  /* Print button */
+  .print-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    box-shadow: 0 4px 20px rgba(129, 140, 248, 0.3);
+    transition: transform 0.2s;
+  }
+  .print-btn:hover { transform: translateY(-2px); }
+
+  @media (max-width: 640px) {
+    .modes { grid-template-columns: 1fr; }
+    body { padding: 24px 16px; }
+    .header h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">📄 Save as PDF</button>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">User Guide</div>
+  <h1>🔍 Admitad Docs Assistant</h1>
+  <p>Ask questions about Admitad advertiser documentation in natural language and get instant, accurate answers with source citations.</p>
+</div>
+
+<!-- ACCESS -->
+<h2><span class="num">01</span> Access the Application</h2>
+
+<div class="url-box">
+  <div class="label">Application URL</div>
+  <a href="https://paulopestana-admitad-docs-assistant.hf.space" target="_blank">
+    paulopestana-admitad-docs-assistant.hf.space
+  </a>
+</div>
+
+<p>Open the URL above in any modern browser (Chrome, Firefox, Safari, Edge). No installation, no login, no account required.</p>
+
+<div class="info-box tip">
+  <div class="label">💡 Tip</div>
+  <p style="margin:0">If the app shows "Building..." when you first access it, wait 2-3 minutes — it's starting up. After that, it stays active.</p>
+</div>
+
+<!-- GETTING STARTED -->
+<h2><span class="num">02</span> Getting Started (No API Key)</h2>
+
+<p>The app works immediately in <strong>Search Only</strong> mode — no API key needed. Just type your question and get relevant documentation excerpts.</p>
+
+<ol class="steps">
+  <li>
+    <strong>Open the app</strong>
+    You'll see the chat interface with a sidebar on the left.
+  </li>
+  <li>
+    <strong>Type your question</strong>
+    Use the input field at the bottom: <em>"Ask a question about Admitad documentation..."</em>
+  </li>
+  <li>
+    <strong>Read the results</strong>
+    The system finds the most relevant documentation excerpts and shows them with the source file, section name, and a relevance score.
+  </li>
+  <li>
+    <strong>Click "View original article"</strong>
+    Each result links to the original article on the Admitad support website.
+  </li>
+</ol>
+
+<div class="example">
+  <div class="q">
+    <span>You ask:</span><br>
+    What documents are required for cooperation with Admitad?
+  </div>
+  <div class="a">
+    <strong>SEMANTIC SEARCH · relevance: 100%</strong><br>
+    📄 documents-required-for-cooperation-with-admitad.md<br><br>
+    To launch an affiliate program, you need to establish a partnership with Admitad. For that, provide the following: Supporting documents, Your company's payment details. Send all information to advsupport@admitad.com
+  </div>
+</div>
+
+<!-- AI MODE -->
+<h2><span class="num">03</span> Enable AI-Powered Answers (Free)</h2>
+
+<p>For more detailed, interpreted answers that combine information from multiple documents, you can enable AI mode with a free API key.</p>
+
+<ol class="steps">
+  <li>
+    <strong>Get a free Groq API key</strong>
+    Go to <a href="https://console.groq.com/keys" target="_blank" style="color:var(--accent)">console.groq.com/keys</a> — create a free account (no credit card), then click "Create API Key" and copy it.
+  </li>
+  <li>
+    <strong>Paste the key in the sidebar</strong>
+    In the app sidebar under "🔑 API Key", paste your key. It starts with <code>gsk_</code>. The app will show "✅ Detected: groq".
+  </li>
+  <li>
+    <strong>Choose a query mode</strong>
+    Switch from "Search Only" to one of the AI-powered modes (see section 04 below).
+  </li>
+  <li>
+    <strong>Ask your question</strong>
+    The AI will generate a natural-language answer combining information from multiple sources, with citations like [Source 1], [Source 2].
+  </li>
+</ol>
+
+<div class="info-box tip">
+  <div class="label">💡 Privacy</div>
+  <p style="margin:0">Your API key is only used during your session and is never stored on our servers. It's sent directly from your browser to the AI provider (Groq).</p>
+</div>
+
+<div class="example">
+  <div class="q">
+    <span>You ask:</span><br>
+    What is the difference between tracking code and postback integration?
+  </div>
+  <div class="a">
+    <strong>CHAT RAG · groq (llama-3.3-70b-versatile)</strong><br><br>
+    The main difference is how target action data is transmitted to Admitad:<br><br>
+    <strong>Tracking code</strong> places a JavaScript snippet on your website that sends data from the user's browser. [Source 1]<br><br>
+    <strong>Postback integration</strong> sends data directly from your server to Admitad's server, making it more secure and unaffected by ad blockers or browser privacy settings. [Source 2]<br><br>
+    Postback is generally recommended as the more reliable method, though it requires server-side access. [Source 3]
+  </div>
+</div>
+
+<!-- MODES -->
+<h2><span class="num">04</span> Query Modes Explained</h2>
+
+<p>Choose how your questions are processed using the mode selector in the sidebar.</p>
+
+<div class="modes">
+  <div class="mode-card">
+    <div class="icon">🔍</div>
+    <div class="name">Search Only — Free, no AI</div>
+    <div class="desc">Returns raw documentation excerpts. No AI interpretation. Works without an API key.</div>
+    <div class="cost">Cost: 0 AI calls</div>
+  </div>
+  <div class="mode-card">
+    <div class="icon">⚡</div>
+    <div class="name">Smart Auto — Best balance</div>
+    <div class="desc">The system analyzes your question with keyword patterns. Simple questions → search. Complex questions → AI answer.</div>
+    <div class="cost">Cost: 0–1 AI calls</div>
+  </div>
+  <div class="mode-card">
+    <div class="icon">🧠</div>
+    <div class="name">AI Auto — Most accurate</div>
+    <div class="desc">An AI model reads your question and picks the best approach. More accurate routing, but uses an extra AI call.</div>
+    <div class="cost">Cost: 1–2 AI calls</div>
+  </div>
+  <div class="mode-card">
+    <div class="icon">💬</div>
+    <div class="name">Always AI Answer</div>
+    <div class="desc">Every question gets a full AI-generated answer that combines multiple documents with source citations.</div>
+    <div class="cost">Cost: 1 AI call</div>
+  </div>
+</div>
+
+<div class="info-box warning">
+  <div class="label">⚠️ Recommendation</div>
+  <p style="margin:0"><strong>Start with "Search Only"</strong> to explore the documentation. Switch to <strong>"Smart Auto"</strong> or <strong>"Always AI Answer"</strong> when you need the AI to explain, compare, or summarize information from multiple articles.</p>
+</div>
+
+<!-- SAMPLE QUESTIONS -->
+<h2><span class="num">05</span> Sample Questions to Try</h2>
+
+<h3>Simple lookups (work great in Search Only)</h3>
+<ul class="steps">
+  <li><strong>What documents are required for cooperation with Admitad?</strong></li>
+  <li><strong>How to sign up for Admitad as an advertiser?</strong></li>
+  <li><strong>What are tracking promo codes?</strong></li>
+  <li><strong>How to add banners to my affiliate program?</strong></li>
+</ul>
+
+<h3>Complex questions (best with AI modes)</h3>
+<ul class="steps">
+  <li><strong>What is the difference between tracking code and postback integration?</strong></li>
+  <li><strong>Explain the step-by-step process from registration to launching a program</strong></li>
+  <li><strong>How does auto-verification work via postback vs XML?</strong></li>
+  <li><strong>What are all the ways to engage publishers in cooperation?</strong></li>
+</ul>
+
+<!-- SUPPORTED PROVIDERS -->
+<h2><span class="num">06</span> Supported AI Providers</h2>
+
+<p>The app supports multiple AI providers. You can use any of these API keys:</p>
+
+<div class="modes">
+  <div class="mode-card">
+    <div class="name">🟢 Groq</div>
+    <div class="desc">Free, fast. Key starts with <code>gsk_</code></div>
+    <div class="cost"><a href="https://console.groq.com/keys" target="_blank" style="color:var(--accent2)">Get free key →</a></div>
+  </div>
+  <div class="mode-card">
+    <div class="name">🔴 Google Gemini</div>
+    <div class="desc">Free tier available. Key starts with <code>AI</code></div>
+    <div class="cost"><a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent2)">Get free key →</a></div>
+  </div>
+  <div class="mode-card">
+    <div class="name">🔵 OpenAI</div>
+    <div class="desc">Paid. Key starts with <code>sk-</code></div>
+    <div class="cost">platform.openai.com</div>
+  </div>
+  <div class="mode-card">
+    <div class="name">🟠 Anthropic</div>
+    <div class="desc">Paid. Key starts with <code>sk-ant-</code></div>
+    <div class="cost">console.anthropic.com</div>
+  </div>
+</div>
+
+<!-- TIPS -->
+<h2><span class="num">07</span> Tips for Best Results</h2>
+
+<div class="info-box tip">
+  <div class="label">Be specific</div>
+  <p style="margin:0">Instead of "How does integration work?", try "How to integrate via postback request?" — the more specific, the better the results.</p>
+</div>
+
+<div class="info-box tip">
+  <div class="label">Use English</div>
+  <p style="margin:0">The documentation is in English. While the AI can respond in other languages, questions in English typically produce the most accurate results.</p>
+</div>
+
+<div class="info-box tip">
+  <div class="label">Check the sources</div>
+  <p style="margin:0">Always click "View original article" to verify the information in its full context. The AI is helpful but not infallible.</p>
+</div>
+
+<div class="info-box tip">
+  <div class="label">Clear conversation</div>
+  <p style="margin:0">If the AI seems confused or gives odd answers, click "🗑️ Clear conversation" in the sidebar to reset the chat history.</p>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>Admitad Docs Assistant · Built with FastAPI, Streamlit, ChromaDB & Groq</p>
+  <p style="margin-top:8px">Questions or feedback? Contact the development team.</p>
+</div>
+
+</body>
+</html>

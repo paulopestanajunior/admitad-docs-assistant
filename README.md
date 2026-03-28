@@ -13,6 +13,9 @@ license: mit
 
 An intelligent documentation assistant for the **Admitad Advertiser Knowledge Base**. Ask questions in natural language and get accurate answers with source citations — powered by semantic search and RAG (Retrieval-Augmented Generation).
 
+📖 **[User Guide](https://paulopestanajunior.github.io/admitad-docs-assistant/)** · 🚀 **[Live Demo](https://paulopestana-admitad-docs-assistant.hf.space)**
+
+
 ## How It Works
 
 ```
