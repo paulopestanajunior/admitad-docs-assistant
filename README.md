@@ -1,3 +1,13 @@
+---
+title: Admitad Docs Assistant
+emoji: 🔍
+colorFrom: indigo
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+license: mit
+---
 # 🔍 Admitad Docs Assistant — RAG Chat with Smart Routing
 
 An intelligent documentation assistant for the **Admitad Advertiser Knowledge Base**. Ask questions in natural language and get accurate answers with source citations — powered by semantic search and RAG (Retrieval-Augmented Generation).
@@ -31,10 +41,10 @@ User asks a question
 
 | Mode | Classifier | LLM Calls | Best For |
 |---|---|---|---|
-| 🔍 **Search Only** | None | 0 | Quick lookups, no API key needed |
-| ⚡ **Auto (Smart)** | Heuristic (free) | 0–1 | Balanced cost and quality |
-| 🧠 **Auto (LLM)** | LLM classifies | 1–2 | Maximum routing accuracy |
-| 💬 **Always Chat** | None | 1 | Always want a full explanation |
+| 🔍 **Search Only — Free, no AI** | None | 0 | Quick lookups, no API key needed |
+| ⚡ **Smart Auto — Best balance** | Heuristic (free) | 0–1 | Balanced cost and quality |
+| 🧠 **AI Auto — Most accurate routing** | LLM classifies | 1–2 | Maximum routing accuracy |
+| 💬 **Always AI Answer** | None | 1 | Always want a full explanation |
 
 > 📖 **[See detailed explanation with examples →](MODES.md)**
 

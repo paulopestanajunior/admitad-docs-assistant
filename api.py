@@ -394,7 +394,7 @@ def chunks_to_results(chunks: list[dict]) -> list[SearchResult]:
     for chunk in chunks:
         metadata = chunk["metadata"]
         raw_score = chunk.get("rerank_score", 1 - chunk.get("distance", 0.5))
-        normalized = max(0, min(100, (raw_score + 5) * 10))
+        normalized = max(0, min(100, (raw_score + 2) * 15))
 
         results.append(SearchResult(
             text=chunk["text"],

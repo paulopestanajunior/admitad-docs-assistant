@@ -11,23 +11,23 @@ API_URL = "http://localhost:8000"
 # Mode definitions
 MODES = {
     "search_only": {
-        "label": "🔍 Search Only",
-        "description": "Returns raw document excerpts. No LLM, no cost.",
+        "label": "🔍 Search Only — Free, no AI",
+        "description": "Finds the most relevant excerpts from the documentation and shows them directly. No AI interpretation — you read the raw source. Fast, free, works without an API key.",
         "needs_key": False,
     },
     "auto_smart": {
-        "label": "⚡ Auto (Smart)",
-        "description": "Free heuristic decides: simple → search, complex → AI answer.",
+        "label": "⚡ Smart Auto — Best balance",
+        "description": "The system analyzes your question using keyword patterns. Simple questions get instant search results. Complex questions (comparisons, explanations) get a full AI-generated answer. No extra AI cost for routing.",
         "needs_key": True,
     },
     "auto_llm": {
-        "label": "🧠 Auto (LLM)",
-        "description": "LLM classifies your question first, then routes. Most accurate.",
+        "label": "🧠 AI Auto — Most accurate routing",
+        "description": "An AI model reads your question and decides the best approach. More accurate than keyword-based routing, but uses one extra AI call per question to classify it.",
         "needs_key": True,
     },
     "always_chat": {
-        "label": "💬 Always Chat",
-        "description": "Every question gets a full AI-generated answer with citations.",
+        "label": "💬 Always AI Answer",
+        "description": "Every question gets a full AI-generated answer that combines information from multiple documents, with source citations. Uses one AI call per question.",
         "needs_key": True,
     },
 }
@@ -183,7 +183,7 @@ if "history" not in st.session_state:
 if "user_api_key" not in st.session_state:
     st.session_state.user_api_key = ""
 if "query_mode" not in st.session_state:
-    st.session_state.query_mode = "auto_smart"
+    st.session_state.query_mode = "search_only"
 
 
 # ── Backend check ──────────────────────────────────────────────
@@ -206,16 +206,18 @@ with st.sidebar:
     # ── Query Mode ─────────────────────────────────────────────
     st.divider()
     st.markdown("**📋 Query Mode**")
+    st.caption("How should your questions be processed?")
 
     mode_keys = list(MODES.keys())
     mode_labels = [MODES[k]["label"] for k in mode_keys]
     current_mode_idx = mode_keys.index(st.session_state.query_mode) if st.session_state.query_mode in mode_keys else 1
 
     selected_mode_label = st.radio(
-        "How should questions be processed?",
+        "Query mode",
         mode_labels,
         index=current_mode_idx,
         label_visibility="collapsed",
+        help="Search Only: no AI, free. Smart Auto: AI only when needed. AI Auto: AI classifies + answers. Always AI: full AI answer every time."
     )
     selected_mode = mode_keys[mode_labels.index(selected_mode_label)]
     st.session_state.query_mode = selected_mode

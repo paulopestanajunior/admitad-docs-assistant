@@ -8,10 +8,10 @@ Admitad Docs Assistant offers **4 query modes** that control how your question i
 
 | Mode | Classifier | Response Type | LLM Calls | Best For |
 |---|---|---|---|---|
-| 🔍 **Search Only** | None | Raw document excerpts | 0 | Quick lookups, no API key needed |
-| ⚡ **Auto (Smart)** | Heuristic (free) | Search or AI answer | 0–1 | Balanced cost and quality |
-| 🧠 **Auto (LLM)** | LLM classifies | Search or AI answer | 1–2 | Maximum routing accuracy |
-| 💬 **Always Chat** | None | AI-generated answer | 1 | Always want a full explanation |
+| 🔍 **Search Only — Free, no AI** | None | Raw document excerpts | 0 | Quick lookups, no API key needed |
+| ⚡ **Smart Auto — Best balance** | Heuristic (free) | Search or AI answer | 0–1 | Balanced cost and quality |
+| 🧠 **AI Auto — Most accurate routing** | LLM classifies | Search or AI answer | 1–2 | Maximum routing accuracy |
+| 💬 **Always AI Answer** | None | AI-generated answer | 1 | Always want a full explanation |
 
 ---
 
@@ -23,7 +23,7 @@ Admitad Docs Assistant offers **4 query modes** that control how your question i
 
 ---
 
-### 🔍 Search Only
+### 🔍 Search Only — Free, no AI
 
 **What happens:** The system finds the most relevant document chunks using semantic similarity and returns them directly. No LLM is involved at any point.
 
@@ -58,7 +58,7 @@ relevance: 95%
 
 ---
 
-### ⚡ Auto (Smart)
+### ⚡ Smart Auto — Best balance
 
 **What happens:** A free heuristic analyzes your question using keyword patterns and question length. For this simple factual question, it routes to **Search**. For a question like *"What is the difference between..."*, it would route to **Chat**.
 
@@ -98,7 +98,7 @@ it requires server-side access. [Source 3]
 
 ---
 
-### 🧠 Auto (LLM)
+### 🧠 AI Auto — Most accurate routing
 
 **What happens:** The LLM itself reads your question and decides whether it needs a simple search or a full AI-generated answer. More accurate routing than heuristics, but costs an extra LLM call.
 
@@ -114,7 +114,7 @@ Questions like *"Can I use postback if my website runs on Shopify?"* — the heu
 
 ---
 
-### 💬 Always Chat
+### 💬 Always AI Answer
 
 **What happens:** Every question goes through the full RAG pipeline. The system retrieves relevant chunks, sends them to the LLM, and generates a natural language answer with citations. No classification step.
 
