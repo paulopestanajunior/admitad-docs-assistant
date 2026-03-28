@@ -13,6 +13,12 @@ jobs:
           fetch-depth: 0
           lfs: true
 
+      - name: Track large files with LFS
+        run: |
+          git lfs install
+          git lfs track "chroma_db/chroma.sqlite3"
+          git lfs track "*.bin"
+
       - name: Push to HuggingFace
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
