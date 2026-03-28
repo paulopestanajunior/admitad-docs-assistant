@@ -10,22 +10,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           lfs: true
 
-      - name: Push to HuggingFace
+      - name: Push to HuggingFace (without chroma_db)
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          # Create a fresh branch with no history (avoids LFS issues from old commits)
+          git checkout --orphan hf-deploy
+          
+          # Remove chroma_db from this deploy (HF already has it)
+          rm -rf chroma_db/
+          echo "chroma_db/" >> .gitignore
+          
+          # Commit everything clean
           git config user.email "github-actions@github.com"
           git config user.name "GitHub Actions"
-
-          # Remove chroma_db from tracking (HF already has it)
-          git rm -r --cached chroma_db/ || true
-          echo "chroma_db/" >> .gitignore
-          git add .gitignore
-          git commit -m "ci: exclude chroma_db from sync" || true
-
-          # Push to HuggingFace
+          git add .
+          git commit -m "deploy: sync from GitHub"
+          
+          # Force push to HuggingFace
           git remote add hf https://paulopestana:$HF_TOKEN@huggingface.co/spaces/paulopestana/admitad-docs-assistant
-          git push hf main --force
+          git push hf hf-deploy:main --force
