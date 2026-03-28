@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" font-family="Segoe UI, Roboto, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f0f1a"/>
+      <stop offset="100%" stop-color="#0a0a12"/>
+    </linearGradient>
+    <linearGradient id="accent1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="accent2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="520" rx="16" fill="url(#bg)"/>
+
+  <!-- Title -->
+  <text x="450" y="36" text-anchor="middle" fill="#6b7280" font-size="11" font-weight="600" letter-spacing="2" text-transform="uppercase">ARCHITECTURE</text>
+
+  <!-- User Question Node -->
+  <rect x="345" y="54" width="210" height="44" rx="10" fill="#1a1a2e" stroke="#2a2a40" stroke-width="1"/>
+  <text x="370" y="80" fill="#e0e0e8" font-size="13" font-weight="600">💬 User asks a question</text>
+
+  <!-- Arrow down to Mode Selector -->
+  <line x1="450" y1="98" x2="450" y2="118" stroke="#3a3a50" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#3a3a50"/></marker></defs>
+
+  <!-- Mode Selector -->
+  <rect x="320" y="118" width="260" height="44" rx="10" fill="rgba(129,140,248,0.12)" stroke="rgba(129,140,248,0.3)" stroke-width="1"/>
+  <text x="345" y="144" fill="#818cf8" font-size="12" font-weight="600">📋 MODE SELECTOR</text>
+  <text x="530" y="144" fill="#6b7280" font-size="10">← User chooses</text>
+
+  <!-- Four arrows down -->
+  <line x1="135" y1="162" x2="135" y2="200" stroke="#3a3a50" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="345" y1="162" x2="345" y2="200" stroke="#3a3a50" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="555" y1="162" x2="555" y2="200" stroke="#3a3a50" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="765" y1="162" x2="765" y2="200" stroke="#3a3a50" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Horizontal connector -->
+  <line x1="135" y1="162" x2="765" y2="162" stroke="#3a3a50" stroke-width="1.5"/>
+
+  <!-- MODE 1: Search Only -->
+  <rect x="45" y="200" width="180" height="140" rx="12" fill="#1a1a2e" stroke="#2a2a40" stroke-width="1"/>
+  <rect x="45" y="200" width="180" height="36" rx="12" fill="rgba(129,140,248,0.12)"/>
+  <rect x="45" y="224" width="180" height="1" fill="#1a1a2e"/>
+  <text x="135" y="223" text-anchor="middle" fill="#818cf8" font-size="12" font-weight="700">🔍 Search Only</text>
+  <text x="65" y="258" fill="#9ca3af" font-size="10.5">Returns raw document</text>
+  <text x="65" y="274" fill="#9ca3af" font-size="10.5">excerpts directly.</text>
+  <text x="65" y="298" fill="#9ca3af" font-size="10.5">No AI involved.</text>
+  <rect x="60" y="312" width="60" height="18" rx="4" fill="rgba(52,211,153,0.15)"/>
+  <text x="90" y="325" text-anchor="middle" fill="#34d399" font-size="9" font-weight="600">0 calls</text>
+
+  <!-- MODE 2: Smart Auto -->
+  <rect x="255" y="200" width="180" height="140" rx="12" fill="#1a1a2e" stroke="#2a2a40" stroke-width="1"/>
+  <rect x="255" y="200" width="180" height="36" rx="12" fill="rgba(251,191,36,0.1)"/>
+  <rect x="255" y="224" width="180" height="1" fill="#1a1a2e"/>
+  <text x="345" y="223" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">⚡ Smart Auto</text>
+  <text x="275" y="258" fill="#9ca3af" font-size="10.5">Heuristic classifies:</text>
+  <text x="275" y="274" fill="#9ca3af" font-size="10.5">simple → search</text>
+  <text x="275" y="290" fill="#9ca3af" font-size="10.5">complex → AI answer</text>
+  <rect x="270" y="312" width="70" height="18" rx="4" fill="rgba(52,211,153,0.15)"/>
+  <text x="305" y="325" text-anchor="middle" fill="#34d399" font-size="9" font-weight="600">0–1 calls</text>
+
+  <!-- MODE 3: AI Auto -->
+  <rect x="465" y="200" width="180" height="140" rx="12" fill="#1a1a2e" stroke="#2a2a40" stroke-width="1"/>
+  <rect x="465" y="200" width="180" height="36" rx="12" fill="rgba(168,85,247,0.12)"/>
+  <rect x="465" y="224" width="180" height="1" fill="#1a1a2e"/>
+  <text x="555" y="223" text-anchor="middle" fill="#a855f7" font-size="12" font-weight="700">🧠 AI Auto</text>
+  <text x="485" y="258" fill="#9ca3af" font-size="10.5">LLM classifies your</text>
+  <text x="485" y="274" fill="#9ca3af" font-size="10.5">question first, then</text>
+  <text x="485" y="290" fill="#9ca3af" font-size="10.5">routes to best path.</text>
+  <rect x="480" y="312" width="70" height="18" rx="4" fill="rgba(251,191,36,0.15)"/>
+  <text x="515" y="325" text-anchor="middle" fill="#fbbf24" font-size="9" font-weight="600">1–2 calls</text>
+
+  <!-- MODE 4: Always AI -->
+  <rect x="675" y="200" width="180" height="140" rx="12" fill="#1a1a2e" stroke="#2a2a40" stroke-width="1"/>
+  <rect x="675" y="200" width="180" height="36" rx="12" fill="rgba(52,211,153,0.1)"/>
+  <rect x="675" y="224" width="180" height="1" fill="#1a1a2e"/>
+  <text x="765" y="223" text-anchor="middle" fill="#34d399" font-size="12" font-weight="700">💬 Always AI</text>
+  <text x="695" y="258" fill="#9ca3af" font-size="10.5">Every question gets</text>
+  <text x="695" y="274" fill="#9ca3af" font-size="10.5">a full AI-generated</text>
+  <text x="695" y="290" fill="#9ca3af" font-size="10.5">answer with citations.</text>
+  <rect x="690" y="312" width="65" height="18" rx="4" fill="rgba(251,191,36,0.15)"/>
+  <text x="723" y="325" text-anchor="middle" fill="#fbbf24" font-size="9" font-weight="600">1 call</text>
+
+  <!-- Arrows to pipeline -->
+  <line x1="135" y1="340" x2="135" y2="370" stroke="#3a3a50" stroke-width="1" stroke-dasharray="4"/>
+  <line x1="345" y1="340" x2="345" y2="370" stroke="#3a3a50" stroke-width="1" stroke-dasharray="4"/>
+  <line x1="555" y1="340" x2="555" y2="370" stroke="#3a3a50" stroke-width="1" stroke-dasharray="4"/>
+  <line x1="765" y1="340" x2="765" y2="370" stroke="#3a3a50" stroke-width="1" stroke-dasharray="4"/>
+
+  <!-- Pipeline section -->
+  <rect x="45" y="370" width="810" height="50" rx="10" fill="#12121c" stroke="#1e1e30" stroke-width="1"/>
+
+  <!-- Pipeline nodes -->
+  <rect x="65" y="380" width="130" height="30" rx="6" fill="rgba(129,140,248,0.08)" stroke="rgba(129,140,248,0.2)" stroke-width="1"/>
+  <text x="130" y="400" text-anchor="middle" fill="#818cf8" font-size="10" font-weight="600">🔎 Embeddings</text>
+
+  <text x="210" y="400" fill="#3a3a50" font-size="14">→</text>
+
+  <rect x="230" y="380" width="130" height="30" rx="6" fill="rgba(129,140,248,0.08)" stroke="rgba(129,140,248,0.2)" stroke-width="1"/>
+  <text x="295" y="400" text-anchor="middle" fill="#818cf8" font-size="10" font-weight="600">🗄️ ChromaDB</text>
+
+  <text x="375" y="400" fill="#3a3a50" font-size="14">→</text>
+
+  <rect x="395" y="380" width="130" height="30" rx="6" fill="rgba(129,140,248,0.08)" stroke="rgba(129,140,248,0.2)" stroke-width="1"/>
+  <text x="460" y="400" text-anchor="middle" fill="#818cf8" font-size="10" font-weight="600">🔄 Reranker</text>
+
+  <text x="540" y="400" fill="#3a3a50" font-size="14">→</text>
+
+  <rect x="560" y="380" width="130" height="30" rx="6" fill="rgba(52,211,153,0.08)" stroke="rgba(52,211,153,0.2)" stroke-width="1"/>
+  <text x="625" y="400" text-anchor="middle" fill="#34d399" font-size="10" font-weight="600">🤖 LLM (optional)</text>
+
+  <text x="705" y="400" fill="#3a3a50" font-size="14">→</text>
+
+  <rect x="725" y="380" width="110" height="30" rx="6" fill="rgba(251,191,36,0.08)" stroke="rgba(251,191,36,0.2)" stroke-width="1"/>
+  <text x="780" y="400" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="600">📄 Response</text>
+
+  <!-- Pipeline label -->
+  <text x="450" y="448" text-anchor="middle" fill="#4b5563" font-size="10" font-weight="500">RAG PIPELINE — Retrieval → Reranking → Generation (when needed)</text>
+
+  <!-- Tech stack footer -->
+  <rect x="120" y="468" width="100" height="26" rx="6" fill="#1a1a2e" stroke="#2a2a40" stroke-width="1"/>
+  <text x="170" y="486" text-anchor="middle" fill="#6b7280" font-size="9" font-weight="500">multilingual-e5</text>
+
+  <rect x="240" y="468" width="90" height="26" rx="6" fill="#1a1a2e" stroke="#2a2a40" stroke-width="1"/>
+  <text x="285" y="486" text-anchor="middle" fill="#6b7280" font-size="9" font-weight="500">ChromaDB</text>
+
+  <rect x="350" y="468" width="100" height="26" rx="6" fill="#1a1a2e" stroke="#2a2a40" stroke-width="1"/>
+  <text x="400" y="486" text-anchor="middle" fill="#6b7280" font-size="9" font-weight="500">cross-encoder</text>
+
+  <rect x="470" y="468" width="80" height="26" rx="6" fill="#1a1a2e" stroke="#2a2a40" stroke-width="1"/>
+  <text x="510" y="486" text-anchor="middle" fill="#6b7280" font-size="9" font-weight="500">Groq / OAI</text>
+
+  <rect x="570" y="468" width="80" height="26" rx="6" fill="#1a1a2e" stroke="#2a2a40" stroke-width="1"/>
+  <text x="610" y="486" text-anchor="middle" fill="#6b7280" font-size="9" font-weight="500">FastAPI</text>
+
+  <rect x="670" y="468" width="90" height="26" rx="6" fill="#1a1a2e" stroke="#2a2a40" stroke-width="1"/>
+  <text x="715" y="486" text-anchor="middle" fill="#6b7280" font-size="9" font-weight="500">Streamlit</text>
+
+  <!-- Footer text -->
+  <text x="450" y="512" text-anchor="middle" fill="#3a3a50" font-size="9">Admitad Docs Assistant — Open Source · MIT License</text>
+</svg>

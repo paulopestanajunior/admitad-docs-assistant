@@ -18,28 +18,9 @@ An intelligent documentation assistant for the **Admitad Advertiser Knowledge Ba
 
 ## How It Works
 
-```
-User asks a question
-        │
-        ▼
-┌──────────────────────┐
-│   MODE SELECTOR       │ ← User chooses in sidebar
-└──────────┬───────────┘
-           │
-    ┌──────┼──────────────────┐
-    ▼      ▼                  ▼
-┌────────┐ ┌────────────┐ ┌────────────┐
-│SEARCH  │ │ AUTO MODE  │ │ ALWAYS     │
-│ONLY    │ │            │ │ CHAT       │
-│        │ │ Heuristic  │ │            │
-│Returns │ │ or LLM     │ │ Always     │
-│raw doc │ │ decides    │ │ generates  │
-│chunks  │ │ the route  │ │ AI answer  │
-│        │ │   ↓    ↓   │ │ with cited │
-│0 LLM   │ │SEARCH CHAT │ │ sources    │
-│calls   │ │            │ │            │
-└────────┘ └────────────┘ └────────────┘
-```
+![Architecture](architecture.svg)
+
+
 
 **4 query modes** to fit every use case:
 
