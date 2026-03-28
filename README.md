@@ -8,6 +8,7 @@ app_port: 7860
 pinned: false
 license: mit
 ---
+
 # 🔍 Admitad Docs Assistant — RAG Chat with Smart Routing
 
 An intelligent documentation assistant for the **Admitad Advertiser Knowledge Base**. Ask questions in natural language and get accurate answers with source citations — powered by semantic search and RAG (Retrieval-Augmented Generation).
@@ -442,32 +443,235 @@ HuggingFace automatically rebuilds and redeploys.
 
 ---
 
-## Troubleshooting
+## Troubleshooting & FAQ
 
-### `OSError: O arquivo de paginação é muito pequeno` (Windows)
-The embedding model (~2.2GB) is exceeding available RAM. Close other applications (browsers, IDEs) and try again. If it persists, switch to the smaller model in `ingest.py` and `api.py`:
+### Setup & Installation
+
+<details>
+<summary><b>❌ Python 3.13: <code>numpy</code> fails to build / <code>metadata-generation-failed</code></b></summary>
+
+Python 3.13 is too new — many ML libraries (numpy, sentence-transformers, chromadb) don't have pre-built wheels for it yet, so pip tries to compile from source and fails on Windows.
+
+**Solution:** Use Python 3.11 or 3.12:
+```bash
+py -3.11 -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+Check available versions with `py --list`.
+</details>
+
+<details>
+<summary><b>❌ Windows: <code>OSError: O arquivo de paginação é muito pequeno</code> (OS error 1455)</b></summary>
+
+The embedding model (`multilingual-e5-large`, ~2.2GB) is exceeding available RAM when loading.
+
+**Solutions (try in order):**
+1. Close other applications (browser tabs, IDEs, AnythingLLM, etc.) and try again
+2. If it still fails, switch to the smaller model in both `ingest.py` and `api.py`:
 ```python
 EMBEDDING_MODEL = "intfloat/multilingual-e5-base"  # 500MB instead of 2.2GB
 ```
-Then re-run `python ingest.py`.
+Then re-run `python ingest.py` (re-ingestion required when changing model).
+</details>
 
-### `model has been decommissioned` (Groq)
-Groq periodically retires old models. Update the model name in `llm_providers.py` or `.env`:
+<details>
+<summary><b>❌ <code>DuplicateIDError: Expected IDs to be unique</code> during ingestion</b></summary>
+
+Some document chunks produce identical MD5 hashes, causing ChromaDB to reject them.
+
+**Solution:** Make sure you're using the latest `ingest.py` with the `_next_chunk_id()` function that includes a global counter. The fix generates unique IDs by combining filename + counter + text prefix.
+</details>
+
+<details>
+<summary><b>❌ <code>ModuleNotFoundError: No module named 'requests'</code></b></summary>
+
+Your virtual environment is not activated, or dependencies aren't installed.
+
+**Solution:**
+```bash
+venv\Scripts\activate          # Windows
+source venv/bin/activate       # macOS/Linux
+pip install -r requirements.txt
+```
+</details>
+
+### LLM & Providers
+
+<details>
+<summary><b>❌ <code>model 'llama-3.1-70b-versatile' has been decommissioned</code></b></summary>
+
+Groq periodically retires old models.
+
+**Solution:** Update the model name in `llm_providers.py` or your `.env`:
 ```
 GROQ_MODEL=llama-3.3-70b-versatile
 ```
+Check available models at [console.groq.com/docs/models](https://console.groq.com/docs/models).
+</details>
 
-### `DuplicateIDError` during ingestion
-This was fixed in the latest `ingest.py`. Make sure you're using the version with `_next_chunk_id()` that includes a global counter.
+<details>
+<summary><b>❌ Classifier falls back to heuristic / <code>Error code: 400</code></b></summary>
 
-### `Python 3.13` compatibility issues
-Python 3.13 is too new for many ML libraries. Use Python 3.11 or 3.12:
+Usually caused by an expired/invalid API key or a decommissioned model.
+
+**Diagnosis:**
 ```bash
-py -3.11 -m venv venv
+python -c "from dotenv import load_dotenv; import os; load_dotenv(); print(os.getenv('GROQ_API_KEY')[:10])"
 ```
+If this prints the first 10 characters, the key is loaded. Test it directly:
+```bash
+python -c "
+from groq import Groq
+client = Groq(api_key='YOUR_FULL_KEY')
+r = client.chat.completions.create(model='llama-3.3-70b-versatile', messages=[{'role':'user','content':'Hello'}], max_tokens=10)
+print(r.choices[0].message.content)
+"
+```
+</details>
 
-### HuggingFace build fails with out of memory
-Switch to the smaller embedding model (`multilingual-e5-base`) or upload `chroma_db/` pre-built to skip ingestion.
+<details>
+<summary><b>⚠️ <code>Failed to send telemetry event</code> warnings from ChromaDB</b></summary>
+
+These are harmless ChromaDB telemetry warnings — they do not affect functionality. ChromaDB tries to send anonymous usage analytics and fails. You can safely ignore them.
+</details>
+
+<details>
+<summary><b>⚠️ <code>Field "model_used" has conflict with protected namespace "model_"</code></b></summary>
+
+Pydantic warning about a field name conflicting with its internal namespace. Does not affect functionality. Can be suppressed by adding to the Pydantic models:
+```python
+model_config = {"protected_namespaces": ()}
+```
+</details>
+
+### HuggingFace Deployment
+
+<details>
+<summary><b>❌ HF push rejected: <code>files larger than 10 MiB</code></b></summary>
+
+The `chroma_db/chroma.sqlite3` file exceeds HuggingFace's regular file size limit.
+
+**Solution:** Use Git LFS to track large files:
+```bash
+git lfs install
+git lfs track "chroma_db/chroma.sqlite3"
+git add .gitattributes
+git add chroma_db/chroma.sqlite3 --force
+git commit --amend --no-edit
+git push
+```
+</details>
+
+<details>
+<summary><b>❌ HF push: <code>read access but not the required permissions</code></b></summary>
+
+Your HuggingFace token only has Read access.
+
+**Solution:** Create a new token with **Write** permissions:
+1. Go to [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
+2. Create token with Write access
+3. Clear cached credentials and re-push:
+```bash
+cmdkey /delete:git:https://huggingface.co     # Windows
+git push
+```
+</details>
+
+<details>
+<summary><b>❌ HF build: out of memory</b></summary>
+
+The embedding model download (~2.2GB) + ingestion can exceed the free tier memory.
+
+**Solutions:**
+1. Include `chroma_db/` pre-built in your repo (skips ingestion on startup)
+2. Switch to the smaller model `intfloat/multilingual-e5-base` in the Dockerfile
+</details>
+
+<details>
+<summary><b>❌ HF Space shows "Building" forever</b></summary>
+
+First build takes 15-25 minutes (downloading ML models). Check the **Build** tab for progress. If it stalls for more than 30 minutes, check for errors in the build logs.
+</details>
+
+### GitHub Actions (Auto-Sync)
+
+<details>
+<summary><b>❌ GitHub push rejected: <code>refusing to allow a Personal Access Token to create or update workflow</code></b></summary>
+
+Your GitHub Personal Access Token doesn't have the `workflow` scope.
+
+**Solution:**
+1. Go to [github.com/settings/tokens](https://github.com/settings/tokens)
+2. Edit your token → enable ✅ **workflow** scope
+3. Save, then clear cached credentials and retry:
+```bash
+cmdkey /delete:git:https://github.com     # Windows
+git push
+```
+</details>
+
+<details>
+<summary><b>❌ GitHub Action fails: <code>chroma.sqlite3 larger than 10 MiB</code></b></summary>
+
+The auto-sync workflow pushes the full repo to HuggingFace, including the large `chroma_db/` folder.
+
+**Solution:** The workflow is configured to exclude `chroma_db/` from the sync. The HuggingFace Space keeps its own copy from the initial manual push. If you need to update the vector store on HuggingFace, push directly:
+```bash
+cd hf-space
+git add chroma_db/
+git commit -m "docs: update vector store"
+git push
+```
+</details>
+
+<details>
+<summary><b>ℹ️ How does GitHub → HuggingFace sync work?</b></summary>
+
+A GitHub Actions workflow (`.github/workflows/sync-to-hf.yml`) runs on every push to `main`. It:
+
+1. Checks out the code
+2. Removes `chroma_db/` from tracking (to avoid LFS issues)
+3. Force-pushes to HuggingFace Spaces
+
+**Important notes:**
+- Code changes sync automatically
+- `chroma_db/` does NOT sync automatically (too large). Update it manually via `hf-space/` repo
+- Secrets (`GROQ_API_KEY`) must be configured separately on both platforms
+- The `HF_TOKEN` secret must be set in GitHub repo Settings → Secrets → Actions
+</details>
+
+### Updating Documents
+
+<details>
+<summary><b>ℹ️ How do I add new documents?</b></summary>
+
+1. Add `.md` / `.txt` / `.html` files to the `docs/` folder
+2. Re-run ingestion: `python ingest.py` (~30 min on CPU)
+3. Push code changes: `git push` (auto-syncs to HuggingFace)
+4. To update `chroma_db/` on HuggingFace, push manually to `hf-space/` repo
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed instructions.
+</details>
+
+<details>
+<summary><b>ℹ️ How do I update the vector store on HuggingFace after adding new docs?</b></summary>
+
+The auto-sync workflow does NOT sync `chroma_db/` (file too large for regular git). After re-running `python ingest.py` locally:
+
+```bash
+# Option A: Push chroma_db directly to HuggingFace
+cd hf-space
+xcopy /E /I /Y C:\Users\paulo\admitad-rag-chat-project\chroma_db\* chroma_db\
+git add chroma_db/
+git commit -m "docs: update vector store with new articles"
+git push
+
+# Option B: Let HuggingFace re-ingest on restart
+# Remove chroma_db/ from HuggingFace and it will run ingest.py on next boot (~30 min)
+```
+</details>
 
 ---
 
