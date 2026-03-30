@@ -384,8 +384,62 @@ def rerank_chunks(query: str, chunks: list[dict], top_k: int = TOP_K_RERANK) -> 
     for chunk, score in zip(chunks, scores):
         chunk["rerank_score"] = float(score)
 
+    # Apply metadata relevance adjustment
+    chunks = _adjust_scores_by_metadata(query, chunks)
+
     chunks.sort(key=lambda x: x["rerank_score"], reverse=True)
     return chunks[:top_k]
+
+
+def _adjust_scores_by_metadata(query: str, chunks: list[dict]) -> list[dict]:
+    """
+    Adjust rerank scores based on document title/filename relevance.
+    If a chunk comes from a document whose title doesn't match the query topic,
+    penalize its score. If the title is highly relevant, boost it slightly.
+    """
+    query_lower = query.lower()
+
+    # Extract key terms from query (simple keyword extraction)
+    # Remove common stop words
+    stop_words = {
+        "what", "is", "the", "a", "an", "how", "to", "do", "does", "can",
+        "between", "and", "or", "in", "for", "of", "with", "from", "by",
+        "this", "that", "are", "was", "were", "be", "been", "being",
+        "have", "has", "had", "will", "would", "could", "should",
+        "which", "who", "whom", "where", "when", "why",
+        "i", "you", "he", "she", "it", "we", "they", "my", "your",
+        "difference", "explain", "compare", "describe", "tell", "me", "about",
+    }
+
+    query_terms = set()
+    for word in query_lower.split():
+        # Clean punctuation
+        clean = word.strip("?.,!;:'\"")
+        if clean and clean not in stop_words and len(clean) > 2:
+            query_terms.add(clean)
+
+    for chunk in chunks:
+        filename = chunk["metadata"].get("filename", "").lower().replace("-", " ").replace("_", " ").replace(".md", "")
+        title = chunk["metadata"].get("title", "").lower()
+        section = chunk["metadata"].get("section", "").lower()
+
+        # Combine all metadata into one string for matching
+        meta_text = f"{filename} {title} {section}"
+
+        # Count how many query terms appear in metadata
+        matches = sum(1 for term in query_terms if term in meta_text)
+        match_ratio = matches / max(len(query_terms), 1)
+
+        # Apply adjustment
+        if match_ratio >= 0.5:
+            # Document title is relevant to the query — small boost
+            chunk["rerank_score"] *= 1.1
+        elif match_ratio == 0:
+            # Document title has NO relation to query terms — penalize
+            chunk["rerank_score"] *= 0.7
+        # Otherwise leave score unchanged
+
+    return chunks
 
 
 def chunks_to_results(chunks: list[dict]) -> list[SearchResult]:
@@ -394,7 +448,7 @@ def chunks_to_results(chunks: list[dict]) -> list[SearchResult]:
     for chunk in chunks:
         metadata = chunk["metadata"]
         raw_score = chunk.get("rerank_score", 1 - chunk.get("distance", 0.5))
-        normalized = max(0, min(100, (raw_score + 2) * 15))
+        normalized = max(0, min(100, (raw_score + 5) * 10))
 
         results.append(SearchResult(
             text=chunk["text"],
