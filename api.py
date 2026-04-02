@@ -25,7 +25,7 @@ load_dotenv()
 CHROMA_DIR = "chroma_db"
 COLLECTION_NAME = "documentation"
 EMBEDDING_MODEL = "intfloat/multilingual-e5-large"
-RERANKER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+RERANKER_MODEL = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
 
 TOP_K_RETRIEVAL = 10
 TOP_K_RERANK = 5
@@ -422,9 +422,10 @@ def _adjust_scores_by_metadata(query: str, chunks: list[dict]) -> list[dict]:
         filename = chunk["metadata"].get("filename", "").lower().replace("-", " ").replace("_", " ").replace(".md", "")
         title = chunk["metadata"].get("title", "").lower()
         section = chunk["metadata"].get("section", "").lower()
+        category = chunk["metadata"].get("category", "").lower().replace("-", " ")
 
         # Combine all metadata into one string for matching
-        meta_text = f"{filename} {title} {section}"
+        meta_text = f"{filename} {title} {section} {category}"
 
         # Count how many query terms appear in metadata
         matches = sum(1 for term in query_terms if term in meta_text)

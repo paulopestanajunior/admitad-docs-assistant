@@ -7,3 +7,8 @@ __pycache__/
 dist/
 build/
 .adm_rag/
+
+chroma_db/
+docs.zip
+colab_ingest.ipynb
+.claude/
