@@ -24,8 +24,29 @@ load_dotenv()
 # ── Configuration ──────────────────────────────────────────────
 CHROMA_DIR = "chroma_db"
 COLLECTION_NAME = "documentation"
-EMBEDDING_MODEL = "intfloat/multilingual-e5-large"
-RERANKER_MODEL = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
+#RERANKER_MODEL = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
+RERANKER_MODEL = "BAAI/bge-reranker-v2-m3"
+
+MODELS = {
+    "e5-large":    {"name": "intfloat/multilingual-e5-large",         "query_prefix": "query: "},
+    "e5-instruct": {"name": "intfloat/multilingual-e5-large-instruct", "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery: "},
+    "bge-m3":      {"name": "BAAI/bge-m3",                            "query_prefix": ""},
+}
+
+# Lê qual modelo foi usado no ingest
+_model_config_path = os.path.join(CHROMA_DIR, "embedding_model.txt")
+if os.path.exists(_model_config_path):
+    with open(_model_config_path) as f:
+        lines = f.read().strip().splitlines()
+        _model_key = lines[0] if lines else "e5-large"
+else:
+    _model_key = "e5-large"
+
+_active_model = MODELS.get(_model_key, MODELS["e5-large"])
+EMBEDDING_MODEL = _active_model["name"]
+QUERY_PREFIX = _active_model["query_prefix"]
+
+print(f"Embedding model: {_model_key} → {EMBEDDING_MODEL}")
 
 TOP_K_RETRIEVAL = 10
 TOP_K_RERANK = 5
@@ -112,6 +133,7 @@ class SearchResponse(BaseModel):
 
 
 class ChatResponse(BaseModel):
+    model_config = {"protected_namespaces": ()}
     query: str
     answer: str
     sources: list[SearchResult]
@@ -128,6 +150,7 @@ class AskRequest(BaseModel):
 
 
 class AskResponse(BaseModel):
+    model_config = {"protected_namespaces": ()}
     query: str
     mode: str
     reason: str
@@ -351,7 +374,7 @@ class _GoogleProvider:
 def retrieve_chunks(query: str, top_k: int = TOP_K_RETRIEVAL) -> list[dict]:
     """Retrieve similar chunks from ChromaDB using embeddings."""
     query_embedding = embedder.encode(
-        f"query: {query}",
+        f"{QUERY_PREFIX}{query}",
         normalize_embeddings=True
     ).tolist()
 
@@ -434,22 +457,28 @@ def _adjust_scores_by_metadata(query: str, chunks: list[dict]) -> list[dict]:
         # Apply adjustment
         if match_ratio >= 0.5:
             # Document title is relevant to the query — small boost
-            chunk["rerank_score"] *= 1.1
+            chunk["rerank_score"] *= 1.5
         elif match_ratio == 0:
             # Document title has NO relation to query terms — penalize
-            chunk["rerank_score"] *= 0.7
+            chunk["rerank_score"] *= 0.5
         # Otherwise leave score unchanged
 
     return chunks
 
 
 def chunks_to_results(chunks: list[dict]) -> list[SearchResult]:
-    """Convert internal chunks to SearchResult objects."""
     results = []
-    for chunk in chunks:
+    
+    # Pega o range real dos scores do batch
+    scores = [chunk.get("rerank_score", 1 - chunk.get("distance", 0.5)) for chunk in chunks]
+    min_score = min(scores) if scores else 0
+    max_score = max(scores) if scores else 1
+    score_range = max_score - min_score or 1  # evita divisão por zero
+
+    for chunk, raw_score in zip(chunks, scores):
         metadata = chunk["metadata"]
-        raw_score = chunk.get("rerank_score", 1 - chunk.get("distance", 0.5))
-        normalized = max(0, min(100, (raw_score + 5) * 10))
+        # Normaliza entre 0-100 relativo ao batch
+        normalized = ((raw_score - min_score) / score_range) * 100
 
         results.append(SearchResult(
             text=chunk["text"],

@@ -331,9 +331,11 @@ for msg in st.session_state.messages:
 
             if msg.get("answer"):
                 st.markdown(
-                    f'<div class="chat-answer">{msg["answer"]}</div>',
+                    '<div class="chat-answer">',
                     unsafe_allow_html=True
                 )
+                st.markdown(msg["answer"])
+                st.markdown('</div>', unsafe_allow_html=True)
 
             results = msg.get("results", [])
             if results:
@@ -386,9 +388,11 @@ if query := st.chat_input("Ask a question about Admitad documentation..."):
 
             if answer:
                 st.markdown(
-                    f'<div class="chat-answer">{answer}</div>',
+                    '<div class="chat-answer">',
                     unsafe_allow_html=True
                 )
+                st.markdown(answer)
+                st.markdown('</div>', unsafe_allow_html=True)
 
             if results:
                 label = "📎 Sources" if answer else "📎 Results"
